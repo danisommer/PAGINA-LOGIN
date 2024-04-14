@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import axios from 'axios'
-import './LoginForm.css'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './LoginForm.css';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -14,27 +15,31 @@ function LoginForm() {
     setPassword(e.target.value);
   };
 
+  useEffect(() => {
+    setIsFormValid(email.trim() !== '' && password.trim() !== '');
+  }, [email, password]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post( "http://localhost:3000/login", {
+      await axios.post("http://localhost:3000/login", {
         email: email,
-        senha: password 
+        senha: password,
       });
-      console.log(response.data);
+
       window.location.href = '/sucesso';
-      // Faça algo com a resposta, como redirecionar o usuário para uma nova página
+
     } catch (error) {
       console.error('Erro ao fazer login:', error);
-      // Lide com o erro de forma apropriada, como exibir uma mensagem de erro para o usuário
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      <div className='titulo'>
         <h2>Bem vindo!</h2>
+        <p>Insira seus dados para realizar o login.</p>
       </div>
       <div className="form">
         <label htmlFor="email">Email:</label>
@@ -54,7 +59,9 @@ function LoginForm() {
           onChange={handlePasswordChange}
         />
       </div>
-      <button type="submit">Entrar</button>
+      <div className="form">
+        <button type="submit" className="form-button" disabled={!isFormValid}>Entrar</button>
+      </div>
     </form>
   );
 }

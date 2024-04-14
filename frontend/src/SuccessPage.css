@@ -1,0 +1,18 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    height: 100vh; 
+  }
+  
+  h2 {
+    color: rgb(0, 30, 128);
+    font-size: 32px;
+  }
+  
+  p {
+    color: #333;
+    font-size: 18px;
+  }
+  

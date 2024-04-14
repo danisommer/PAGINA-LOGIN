@@ -11,10 +11,6 @@
     
 }
   
-  .form h2 { 
-    margin-bottom: 20px;
-  }
-  
   .form input { 
     width: 100%;
     padding: 10px;
@@ -34,10 +30,6 @@
     cursor: pointer;
   }
   
-  .form button:hover {
-    background-color: #0056b3;
-  }
-  
   .form button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
@@ -47,3 +39,21 @@
     margin-right: 10px; 
   }
 
+  h2 {
+    color: rgb(0, 30, 128);
+    font-size: 32px;
+  }
+  
+  p {
+    color: #333;
+    font-size: 18px;
+  }
+  
+
+.titulo {
+  max-width: 340px;
+  margin: 0 auto;
+  padding: 1px;
+  align-items:baseline;
+  block-size: auto;
+}
