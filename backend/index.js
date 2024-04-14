@@ -1,39 +1,43 @@
 const express = require('express');
-const mysql = require('mysql');
+const cors = require('cors');
+const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuração do MySQL
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'seu_usuario',
-  password: 'sua_senha',
-  database: 'seu_banco_de_dados',
-});
+// Middleware para permitir CORS
+app.use(cors());
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Erro ao conectar ao banco de dados:', err);
-    return;
-  }
-  console.log('Conexão com o banco de dados estabelecida');
+// Middleware para fazer o parse do corpo da solicitação como JSON
+app.use(express.json());
+
+// Configuração do SQLite
+const db = new sqlite3.Database('database.db');
+
+// Criar a tabela 'usuarios' se ela não existir
+db.serialize(() => {
+  db.run(`CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    senha TEXT NOT NULL
+  )`);
 });
 
 // Rota para lidar com solicitações POST de login
 app.post('/login', (req, res) => {
   const { email, senha } = req.body;
   
-  // Salvar os dados no banco de dados
-  const sql = 'INSERT INTO usuarios (email, senha) VALUES (?, ?)';
-  connection.query(sql, [email, senha], (err, result) => {
+  // Verifique se o email e a senha estão presentes
+  if (!email || !senha) {
+    return res.status(400).json({ error: 'É necessário fornecer um email e uma senha' });
+  }
+
+  // Inserir os dados de email e senha no banco de dados
+  db.run('INSERT INTO usuarios (email, senha) VALUES (?, ?)', [email, senha], (err) => {
     if (err) {
-      console.error('Erro ao inserir dados no banco de dados:', err);
-      res.status(500).json({ error: 'Erro ao salvar os dados' });
-      return;
+      return res.status(500).json({ error: 'Erro ao inserir os dados no banco de dados' });
     }
-    console.log('Dados inseridos com sucesso:', result);
-    res.json({ message: 'Dados salvos com sucesso' });
+    res.json({ message: 'Login bem-sucedido' });
   });
 });
 

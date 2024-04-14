@@ -18,11 +18,12 @@ function LoginForm() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/login', {
+      const response = await axios.post( "http://localhost:3000/login", {
         email: email,
         senha: password 
       });
       console.log(response.data);
+      window.location.href = '/sucesso';
       // Faça algo com a resposta, como redirecionar o usuário para uma nova página
     } catch (error) {
       console.error('Erro ao fazer login:', error);
@@ -30,9 +31,11 @@ function LoginForm() {
     }
   };
 
-
   return (
     <form onSubmit={handleSubmit}>
+      <div>
+        <h2>Bem vindo!</h2>
+      </div>
       <div className="form">
         <label htmlFor="email">Email:</label>
         <input

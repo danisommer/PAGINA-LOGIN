@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
+import SuccessPage from './SuccessPage';
 import './App.css'
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
   return (
-    <div className="App">
-      <h1>Bem vindo!</h1>
-      <LoginForm />
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={isLoggedIn ? <Navigate to="/sucesso" /> : <LoginForm onLogin={handleLogin} />} />
+          <Route path="/sucesso" element={isLoggedIn ? <SuccessPage /> : <Navigate to="/" />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
